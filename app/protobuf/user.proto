@@ -36,10 +36,3 @@ message DeleteProductRequest {
 message DeleteProductResponse {
     string productId = 1;
 }
-
-message UserReply {
-    int64 id = 1;
-    string firstName = 2;
-    string lastName = 3;
-    repeated ProductReply products = 4;
-}
