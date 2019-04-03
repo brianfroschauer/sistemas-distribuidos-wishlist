@@ -2,9 +2,9 @@ package controllers
 
 import com.typesafe.config.Config
 import example.myapp.helloworld.grpc.GreeterServiceClient
-import example.myapp.product.grpc.{ProductRequest, ProductServiceClient}
 import javax.inject.Inject
 import play.api.mvc._
+import proto.{ProductRequest, ProductServiceClient}
 import repositories.UserRepository
 
 import scala.concurrent.ExecutionContext

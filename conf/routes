@@ -1,6 +1,6 @@
 # Index
 GET        /                 controllers.HomeController.index
-
++nocsrf
 POST       /api/users        controllers.UserController.addUser
 
 

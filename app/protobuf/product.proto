@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
-option java_package = "example.myapp.product.grpc";
-option java_outer_classname = "ProductProto";
+package proto;
 
 service ProductService {
     rpc GetProduct (ProductRequest) returns (ProductReply) {}
