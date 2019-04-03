@@ -1,5 +1,5 @@
 import akka.grpc.gen.scaladsl.play._
-import com.typesafe.sbt.packager.docker.{ Cmd, CmdLike, DockerAlias, ExecCmd }
+import com.typesafe.sbt.packager.docker.{Cmd, CmdLike, DockerAlias, ExecCmd}
 
 name := "play-scala-grpc-example"
 version := "1.0-SNAPSHOT"
@@ -80,4 +80,4 @@ libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "4.0.0"
 //    sbt "project docs" "~ paradox"
 //    open docs/target/paradox/site/main/index.html
 lazy val docs = (project in file("docs"))
-  .enablePlugins(ParadoxPlugin) 
+  .enablePlugins(ParadoxPlugin)
