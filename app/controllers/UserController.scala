@@ -36,6 +36,40 @@ class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
       }
     )
   }
+
+  def addProductToUser: Unit = {
+    // TODO Agregar un artículo a la lista de "items deseados" de un usuario.
+
+    /* no esta hecha la tabla que realaciona un USER con un PRODUCT
+     *
+     * No se si hay que agregar un producto cualquiera que le pongas como JSON o si hay que consultar al server de
+     * productos que hizo nacho, ver que productos hay (comunicación con grcp) y despues agregarlo a la lista de favoritos
+     * */
+  }
+
+  def getProductsFromUserWith(userId: Long): Unit = {
+    // TODO Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
+    /*
+     * Aca tiene que devolver la lista de id de los productos que tiene asociado el user
+     */
+
+  }
+
+  def getProductsFromUserWithDescription(userId: Long): Unit = {
+    // TODO Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
+    /*
+     * Aca es parecido al endpoint de arriba, con la diferencia:
+     * En vez de devolver solo los id, se va a devolver productos (hay que ir a buscarlos al server de nacho)
+     */
+
+  }
+
+  def deleteProductFromUser(userId: Long, productId: Long): Unit = {
+    // TODO Eliminar artículos de la lista
+    /*
+     * Aca es eliminar el productId de la tabla user-product (que no esta creada todavía)
+     */
+  }
 }
 
 case class CreateUserForm(firstName: String, lastName: String)
