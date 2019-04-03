@@ -76,7 +76,6 @@ libraryDependencies += "com.typesafe.play" %% "play-slick" % "4.0.0"
 libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "4.0.0"
 
 
-
 // Documentation for this project:
 //    sbt "project docs" "~ paradox"
 //    open docs/target/paradox/site/main/index.html

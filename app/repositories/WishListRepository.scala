@@ -23,7 +23,7 @@ class WishListRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
     def * = (id, userId, productId) <> ((WishList.apply _).tupled, WishList.unapply)
   }
 
-  private val wishList = TableQuery[WishList]
+  private val wishList = TableQuery[WishListTable]
 
   def addProduct(userId: Long, productId: Long): Future[WishList] = db.run {
     (wishList.map(u => (u.userId, u.productId))
