@@ -20,4 +20,5 @@ class HomeController @Inject()(greeterServiceClient: GreeterServiceClient,
     val reply2 = productServiceClient.getProduct(request2)
     reply2.map(_.name).map(m => Ok(m))
   }
+  //ask for all products
 }
