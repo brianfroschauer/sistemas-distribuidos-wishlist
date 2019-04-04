@@ -47,7 +47,6 @@ class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
 
   //TODO DEPRECATED
   def addProductToUser = Action.async { implicit request =>
-    // TODO Agregar un artículo a la lista de "items deseados" de un usuario.
 
     addProductToUserForm.bindFromRequest.fold(
       errorForm => {
@@ -66,7 +65,7 @@ class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
      * */
   }
 
-  //TODO DEPRECATED
+  //TODO DEPRECATED ??
   def getProductsFromUserWith(userId: Long) = Action.async { implicit request =>
     // TODO Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
     wishListRepository.getProducts(userId).map(ids => Ok(ids.toString()))
