@@ -1,7 +1,10 @@
 # Index
-GET        /                 controllers.HomeController.index
+GET        /                     controllers.HomeController.index
 
-POST       /api/users        controllers.UserController.addUser
+POST       /api/products         controllers.UserController.addProductToUser
+GET        /api/products/:id     controllers.UserController.getProductsFromUserWith(id: Long)
+
+POST       /api/users            controllers.UserController.addUser
 
 
 # ----     gRPC services    ----

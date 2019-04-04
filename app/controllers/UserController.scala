@@ -47,11 +47,10 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
     )(AddProductToUserForm.apply)(AddProductToUserForm.unapply)
   }
 
-  //TODO DEPRECATED
   def addProductToUser = Action.async { implicit request =>
 
     addProductToUserForm.bindFromRequest.fold(
-      errorForm => {
+      _ => {
         Future.successful(Ok(views.html.index()))
       },
       data => {
@@ -59,29 +58,19 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
         wishlist.map(w => Ok(w.id.toString))
       }
     )
-
-    /* no esta hecha la tabla que realaciona un USER con un PRODUCT
-     *
-     * No se si hay que agregar un producto cualquiera que le pongas como JSON o si hay que consultar al server de
-     * productos que hizo nacho, ver que productos hay (comunicación con grcp) y despues agregarlo a la lista de favoritos
-     * */
   }
 
-  //TODO DEPRECATED ??
+  /**
+    * Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
+    */
   def getProductsFromUserWith(userId: Long) = Action.async { implicit request =>
-    // TODO Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
     wishListRepository.getProducts(userId).map(ids => Ok(ids.toString()))
-    /*
-     * Aca tiene que devolver la lista de id de los productos que tiene asociado el user
-     */
   }
 
+  /**
+    * Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
+    */
   def getProductsFromUserWithDescription(userId: Long): Action[AnyContent] = Action.async{
-    // TODO Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
-    /*
-     * Aca es parecido al endpoint de arriba, con la diferencia:
-     * En vez de devolver solo los id, se va a devolver productos (hay que ir a buscarlos al server de nacho)
-     */
     val result: Future[Seq[Future[ProductReply]]] = wishlistRepository.getProducts(userId).map(ids => ids.map(id => productServiceClient.getProduct(ProductRequest(id))))
     val result2: Future[Seq[ProductReply]] = result.flatMap(seq => Future.sequence(seq))
 //   Nacho: Aca hice q se vayan a buscar los productos, falta hacer q los devuelva bien, osea pasar list a JSON
@@ -89,12 +78,11 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
 
   }
 
-  //TODO DEPRECATED
+  /**
+    * Eliminar el productId de la tabla user-product
+    */
   def deleteProductFromUser(userId: Long, productId: Long): Unit = {
     wishListRepository.deleteProduct(userId,productId).map(w => Ok(w.toString))
-    /*
-     * Aca es eliminar el productId de la tabla user-product (que no esta creada todavía)
-     */
   }
 }
 
