@@ -61,7 +61,7 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
   }
 
   /**
-    * Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
+    * Recuperar la lista de productos de un usuario.
     */
   def getProductsFromUserWith(userId: Long) = Action.async { implicit request =>
     wishListRepository.getProducts(userId).map(ids => Ok(ids.toString()))
