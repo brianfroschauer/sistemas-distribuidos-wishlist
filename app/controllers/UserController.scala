@@ -8,13 +8,14 @@ import play.api.data.Forms._
 import play.api.data.Forms.mapping
 import play.api.mvc._
 import proto.ProductServiceClient
-import repositories.UserRepository
+import repositories.{UserRepository, WishListRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
                                productServiceClient: ProductServiceClient,
                                userRepository: UserRepository,
+                               wishListRepository: WishListRepository,
                                config: Config)
                               (implicit ec: ExecutionContext) extends InjectedController {
 
@@ -37,8 +38,26 @@ class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
     )
   }
 
-  def addProductToUser: Unit = {
+  val addProductToUserForm: Form[AddProductToUserForm] = Form {
+    mapping(
+      "userId" -> longNumber,
+      "productId" -> longNumber
+    )(AddProductToUserForm.apply)(AddProductToUserForm.unapply)
+  }
+
+  //TODO DEPRECATED
+  def addProductToUser = Action.async { implicit request =>
     // TODO Agregar un artículo a la lista de "items deseados" de un usuario.
+
+    addProductToUserForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.index()))
+      },
+      data => {
+        val wishlist = wishListRepository.addProduct(data.userId,data.productId)
+        wishlist.map(w => Ok(w.id.toString))
+      }
+    )
 
     /* no esta hecha la tabla que realaciona un USER con un PRODUCT
      *
@@ -47,8 +66,10 @@ class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
      * */
   }
 
-  def getProductsFromUserWith(userId: Long): Unit = {
+  //TODO DEPRECATED
+  def getProductsFromUserWith(userId: Long) = Action.async { implicit request =>
     // TODO Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
+    wishListRepository.getProducts(userId).map(ids => Ok(ids.toString()))
     /*
      * Aca tiene que devolver la lista de id de los productos que tiene asociado el user
      */
@@ -64,8 +85,9 @@ class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
 
   }
 
+  //TODO DEPRECATED
   def deleteProductFromUser(userId: Long, productId: Long): Unit = {
-    // TODO Eliminar artículos de la lista
+    wishListRepository.deleteProduct(userId,productId).map(w => Ok(w.toString))
     /*
      * Aca es eliminar el productId de la tabla user-product (que no esta creada todavía)
      */
@@ -73,3 +95,5 @@ class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
 }
 
 case class CreateUserForm(firstName: String, lastName: String)
+
+case class AddProductToUserForm(userId: Long, productId: Long)

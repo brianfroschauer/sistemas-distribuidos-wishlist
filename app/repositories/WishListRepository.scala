@@ -49,7 +49,6 @@ class WishListRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
 
   )*/
 
-  //If present update row, if not insert new row
   def addProduct(userId: Long, productId: Long): Future[WishList] = db.run {
     (wishList.map(u => (u.userId, u.productId))
       returning wishList.map(_.id)
@@ -63,7 +62,8 @@ class WishListRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
     }.map{_.productId}.result
   }
 
-  def deleteProduct(userId: Long, productId: Long): Unit = db.run(
-    wishList.filter{ w => w.productId === productId && w.userId === userId}.delete
-  )
+  //Por que no devuelve un Long? TODO me devuelve el id de la fila, no el del producto
+  def deleteProduct(userId: Long, productId: Long): Future[Int] = db.run {
+    wishList.filter( w => w.productId === productId && w.userId === userId).delete
+  }
 }
