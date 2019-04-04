@@ -1,7 +1,7 @@
 package controllers
 
+import akka.actor.Status.Success
 import com.typesafe.config.Config
-import example.myapp.helloworld.grpc.GreeterServiceClient
 import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
@@ -9,13 +9,15 @@ import play.api.data.Forms.mapping
 import play.api.mvc._
 import proto.ProductServiceClient
 import repositories.{UserRepository, WishListRepository}
+import proto.{ProductReply, ProductRequest, ProductServiceClient}
+import repositories.{UserRepository, WishListRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
-                               productServiceClient: ProductServiceClient,
+class UserController @Inject()(productServiceClient: ProductServiceClient,
                                userRepository: UserRepository,
                                wishListRepository: WishListRepository,
+                               wishlistRepository: WishListRepository,
                                config: Config)
                               (implicit ec: ExecutionContext) extends InjectedController {
 
@@ -72,15 +74,18 @@ class UserController @Inject()(greeterServiceClient: GreeterServiceClient,
     /*
      * Aca tiene que devolver la lista de id de los productos que tiene asociado el user
      */
-
   }
 
-  def getProductsFromUserWithDescription(userId: Long): Unit = {
+  def getProductsFromUserWithDescription(userId: Long): Action[AnyContent] = Action.async{
     // TODO Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
     /*
      * Aca es parecido al endpoint de arriba, con la diferencia:
      * En vez de devolver solo los id, se va a devolver productos (hay que ir a buscarlos al server de nacho)
      */
+    val result: Future[Seq[Future[ProductReply]]] = wishlistRepository.getProducts(userId).map(ids => ids.map(id => productServiceClient.getProduct(ProductRequest(id))))
+    val result2: Future[Seq[ProductReply]] = result.flatMap(seq => Future.sequence(seq))
+//   Nacho: Aca hice q se vayan a buscar los productos, falta hacer q los devuelva bien, osea pasar list a JSON
+    result2.map(list => Ok(list.toString()))
 
   }
 
