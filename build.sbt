@@ -7,7 +7,7 @@ version := "1.0-SNAPSHOT"
 // #grpc_play_plugins
 // build.sbt
 lazy val `play-scala-grpc-example` = (project in file("."))
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, LauncherJarPlugin)
   .enablePlugins(AkkaGrpcPlugin) // enables source generation for gRPC
   .enablePlugins(PlayAkkaHttp2Support) // enables serving HTTP/2 and gRPC
 // #grpc_play_plugins
@@ -81,3 +81,4 @@ libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "4.0.0"
 //    open docs/target/paradox/site/main/index.html
 lazy val docs = (project in file("docs"))
   .enablePlugins(ParadoxPlugin)
+

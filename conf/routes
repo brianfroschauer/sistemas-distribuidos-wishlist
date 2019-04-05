@@ -3,6 +3,7 @@ GET        /                     controllers.HomeController.index
 
 POST       /api/products         controllers.UserController.addProductToUser
 GET        /api/products/:id     controllers.UserController.getProductsFromUserWith(id: Long)
+GET        /api/prodDesc/:id     controllers.UserController.getProductsFromUserWithDescription(id: Long)
 
 POST       /api/users            controllers.UserController.addUser
 

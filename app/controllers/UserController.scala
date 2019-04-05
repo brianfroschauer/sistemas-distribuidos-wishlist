@@ -6,6 +6,7 @@ import javax.inject.Inject
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.Forms.mapping
+import play.api.libs.json.Json
 import play.api.mvc._
 import proto.ProductServiceClient
 import repositories.{UserRepository, WishListRepository}
@@ -35,7 +36,8 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
       },
       data => {
         val user = userRepository.create(data.firstName, data.lastName)
-        user.map(p => Ok(p.id.toString))
+        user.map(p => Ok(Json.toJson(
+          Map("status" -> "OK", "id" -> p.id.toString))))
       }
     )
   }
@@ -55,7 +57,8 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
       },
       data => {
         val wishlist = wishListRepository.addProduct(data.userId,data.productId)
-        wishlist.map(w => Ok(w.id.toString))
+        wishlist.map(w => Ok(Json.toJson(
+          Map("status" -> "OK", "id" -> w.id.toString))))
       }
     )
   }
@@ -64,7 +67,8 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
     * Recuperar la lista de un usuario y recuperar la lista de un usuario incluyend la descripción del producto.
     */
   def getProductsFromUserWith(userId: Long) = Action.async { implicit request =>
-    wishListRepository.getProducts(userId).map(ids => Ok(ids.toString()))
+    wishListRepository.getProducts(userId).map(ids => Ok(Json.toJson(
+      Map("status" -> "OK", "ids" -> ids.toString()))))
   }
 
   /**
@@ -74,7 +78,7 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
     val result: Future[Seq[Future[ProductReply]]] = wishlistRepository.getProducts(userId).map(ids => ids.map(id => productServiceClient.getProduct(ProductRequest(id))))
     val result2: Future[Seq[ProductReply]] = result.flatMap(seq => Future.sequence(seq))
 //   Nacho: Aca hice q se vayan a buscar los productos, falta hacer q los devuelva bien, osea pasar list a JSON
-    result2.map(list => Ok(list.toString()))
+    result2.map(list => Ok(Json.toJson(list.toString())))
 
   }
 
@@ -82,7 +86,7 @@ class UserController @Inject()(productServiceClient: ProductServiceClient,
     * Eliminar el productId de la tabla user-product
     */
   def deleteProductFromUser(userId: Long, productId: Long): Unit = {
-    wishListRepository.deleteProduct(userId,productId).map(w => Ok(w.toString))
+    wishListRepository.deleteProduct(userId,productId).map(_ => Ok)
   }
 }
 
